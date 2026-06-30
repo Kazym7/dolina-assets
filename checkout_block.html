@@ -1,0 +1,596 @@
+<style>
+:root{
+  --red:#8b0000;--red-dark:#700000;
+  --ink:#1A1A1A;--gray:#8A8A8E;--line:#EFEFEF;--bg:#F6F6F7;
+  --green:#1a7a1a;--white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;-webkit-font-smoothing:antialiased;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:#F0F0F2;color:var(--ink);
+}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+
+/* ── HEADER ── */
+.ck-header{
+  background:#fff;border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:100;
+}
+.ck-header-in{
+  display:flex;align-items:center;height:56px;padding:0 20px;
+  max-width:900px;margin:0 auto;
+}
+.btn-back{
+  width:36px;height:36px;border-radius:50%;border:none;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.ck-logo{flex:1;text-align:center;}
+.ck-logo .mk{font-size:10px;letter-spacing:3px;color:var(--gray);font-weight:600;}
+.ck-logo .nm{font-size:18px;font-weight:800;color:var(--red);letter-spacing:1px;line-height:1;}
+.ck-secure{font-size:11px;color:var(--gray);width:36px;display:flex;justify-content:flex-end;}
+
+/* ── PROGRESS (mobile) ── */
+.progress{display:flex;gap:6px;padding:10px 20px 0;max-width:900px;margin:0 auto;}
+.pbar{flex:1;height:3px;border-radius:3px;background:var(--line);}
+.pbar.done{background:var(--red);}
+
+/* ── LAYOUT ── */
+.ck-wrap{max-width:900px;margin:0 auto;padding:16px 16px 100px;}
+@media(min-width:720px){
+  .ck-wrap{display:grid;grid-template-columns:360px 1fr;gap:20px;padding:24px 20px 60px;align-items:start;}
+  #rightCol{display:block !important;}
+  .mob-footer{display:none !important;}
+  .progress{display:none;}
+}
+
+/* ── CARD ── */
+.card{background:#fff;border-radius:20px;overflow:hidden;margin-bottom:14px;}
+.card-head{padding:18px 20px 14px;border-bottom:1px solid var(--line);}
+.card-head h2{font-size:17px;font-weight:800;}
+.card-head span{font-size:13px;color:var(--gray);font-weight:500;margin-left:6px;}
+
+/* ── ITEMS ── */
+.items{padding:12px 16px;}
+.item{display:flex;align-items:center;gap:14px;background:var(--bg);border-radius:18px;padding:10px;margin-bottom:10px;}
+.item:last-child{margin-bottom:0;}
+.item-icon{width:60px;height:60px;border-radius:14px;flex-shrink:0;background:linear-gradient(135deg,var(--red),#c0392b);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;text-align:center;line-height:1.2;}
+.item-info{flex:1;min-width:0;}
+.item-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-unit{font-size:12px;color:var(--gray);margin:2px 0 4px;}
+.item-total{font-size:14px;font-weight:800;}
+.qty{display:flex;align-items:center;gap:8px;background:#fff;border-radius:20px;padding:5px 8px;flex-shrink:0;}
+.qty-btn{width:22px;height:22px;border-radius:50%;border:none;background:var(--bg);color:var(--ink);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1;}
+.qty-btn.plus{background:var(--red);color:#fff;}
+.qty-val{font-size:13px;font-weight:700;min-width:14px;text-align:center;}
+.qty-del{width:22px;height:22px;border-radius:50%;border:none;background:#ffe5e5;color:#c00;font-size:12px;display:flex;align-items:center;justify-content:center;}
+
+/* ── SUMMARY ── */
+.summary{padding:14px 20px 20px;border-top:1px solid var(--line);}
+.sum-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:14px;}
+.sum-row:last-child{margin-bottom:0;}
+.sum-row .val.free{color:var(--green);font-weight:700;}
+.sum-row .val.pickup{color:#5856d6;font-weight:700;}
+.sum-row .val.paid{font-weight:700;}
+.sum-row.total{padding-top:10px;border-top:1px solid var(--line);margin-top:4px;}
+.sum-row.total .lbl{font-size:17px;font-weight:800;}
+.sum-row.total .val{font-size:19px;font-weight:900;color:var(--red);}
+.free-bar{margin-top:12px;padding:10px 12px;background:var(--bg);border-radius:11px;}
+.free-bar-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);margin-bottom:6px;}
+.free-bar-lbl b{color:var(--red);}
+.free-bar-track{height:4px;background:#e0e0e0;border-radius:2px;overflow:hidden;}
+.free-bar-fill{height:100%;background:linear-gradient(90deg,var(--red),#c0392b);border-radius:2px;transition:width .4s;}
+
+/* ── FORM ── */
+.card-form{padding:4px 0 0;}
+.fgroup{padding:0 20px 18px;}
+.flabel{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--gray);text-transform:uppercase;display:block;margin-bottom:8px;}
+.choices{display:flex;gap:8px;}
+.choice{flex:1;border:2px solid var(--line);border-radius:13px;padding:12px 8px;text-align:center;font-size:14px;font-weight:700;color:var(--ink);background:#fff;cursor:pointer;transition:all .15s;}
+.choice small{display:block;font-size:11px;font-weight:600;color:var(--gray);margin-top:2px;}
+.choice.active{background:var(--red);border-color:var(--red);color:#fff;}
+.choice.active small{color:rgba(255,255,255,.6);}
+.finput{width:100%;border:2px solid var(--line);border-radius:13px;padding:13px 14px;font-size:14px;color:var(--ink);background:#fff;outline:none;font-family:inherit;transition:border-color .18s;}
+.finput::placeholder{color:#BDBDC2;}
+.finput:focus{border-color:var(--red);}
+.finput.err{border-color:#e74c3c;}
+.finput-ta{min-height:70px;resize:none;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.dates{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.dates::-webkit-scrollbar{display:none;}
+.date-chip{flex:0 0 auto;min-width:58px;text-align:center;border:2px solid var(--line);border-radius:12px;padding:8px 10px;cursor:pointer;transition:all .15s;}
+.date-chip .dow{font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;}
+.date-chip .day{font-size:13px;font-weight:800;color:var(--ink);margin-top:2px;}
+.date-chip.active{background:var(--red);border-color:var(--red);}
+.date-chip.active .dow,.date-chip.active .day{color:#fff;}
+.times{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.time-chip{border:2px solid var(--line);border-radius:12px;padding:12px;text-align:center;font-weight:700;font-size:13px;color:var(--ink);cursor:pointer;background:#fff;transition:all .15s;}
+.time-chip.active{background:var(--red);border-color:var(--red);color:#fff;}
+.pickup-points{display:flex;flex-direction:column;gap:8px;}
+.pickup-point{border:2px solid var(--line);border-radius:13px;padding:12px 14px;cursor:pointer;transition:all .15s;}
+.pickup-point.active{border-color:var(--red);background:#fff8f8;}
+.pickup-point-name{font-size:13px;font-weight:700;margin-bottom:2px;}
+.pickup-point-addr{font-size:12px;color:var(--gray);}
+.pickup-point-time{font-size:11px;color:var(--gray);margin-top:4px;}
+.hint{font-size:12px;color:var(--gray);margin-top:8px;line-height:1.5;}
+.hint a{color:var(--red);font-weight:700;}
+.hint b{color:var(--ink);}
+.mini-receipt{background:var(--bg);border-radius:14px;padding:14px;margin:0 20px 8px;}
+.mini-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;}
+.mini-row:last-child{margin-bottom:0;font-size:15px;font-weight:800;border-top:1px solid var(--line);padding-top:8px;}
+.mini-row .gray{color:var(--gray);}
+.submit-wrap{padding:12px 20px 16px;}
+.checkout-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:18px;padding:17px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 10px 24px rgba(139,0,0,.28);transition:opacity .15s,transform .1s;}
+.checkout-btn:hover{opacity:.93;}
+.checkout-btn:active{transform:scale(.97);background:var(--red-dark);}
+.checkout-btn:disabled{background:#bbb;box-shadow:none;}
+.legal{text-align:center;font-size:11px;color:var(--gray);padding:4px 20px 20px;line-height:1.5;}
+
+/* ── MOBILE FOOTER ── */
+.mob-footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:12px 20px 28px;box-shadow:0 -4px 16px rgba(0,0,0,.08);z-index:50;}
+.mob-total{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.mob-total .lbl{font-size:13px;color:var(--gray);}
+.mob-total .val{font-size:17px;font-weight:900;}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:60px 20px;background:#fff;border-radius:20px;}
+.empty-icon{font-size:60px;margin-bottom:16px;}
+.empty h2{font-size:18px;font-weight:800;margin-bottom:8px;}
+.empty p{font-size:14px;color:var(--gray);margin-bottom:20px;}
+.btn-red{background:var(--red);color:#fff;border:none;border-radius:13px;padding:14px 28px;font-size:14px;font-weight:700;cursor:pointer;}
+
+/* ── SUCCESS ── */
+#successPage{display:none;min-height:100vh;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;}
+#successPage.show{display:flex;}
+.succ-icon{font-size:72px;margin-bottom:18px;}
+.succ-title{font-size:24px;font-weight:900;margin-bottom:10px;}
+.succ-sub{font-size:14px;color:var(--gray);line-height:1.7;max-width:380px;margin-bottom:20px;}
+.notice-scr{background:#e8f4fd;border:1.5px solid #90c9f0;border-radius:11px;padding:10px 14px;font-size:12px;color:#1a5276;max-width:400px;width:100%;margin-bottom:16px;line-height:1.5;}
+.succ-receipt{background:#fff;border-radius:16px;padding:20px;max-width:420px;width:100%;text-align:left;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:20px;}
+.succ-receipt-head{background:var(--red);color:#fff;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;margin-bottom:14px;}
+.succ-receipt-head span{font-size:12px;font-weight:800;}
+.succ-receipt-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--line);}
+.succ-receipt-row:last-child{border:none;font-weight:800;font-size:14px;padding-top:8px;}
+.succ-actions{display:flex;flex-direction:column;gap:10px;max-width:360px;width:100%;}
+.succ-btn{display:block;width:100%;padding:14px;border-radius:13px;font-size:14px;font-weight:700;text-align:center;cursor:pointer;border:none;}
+.succ-btn.primary{background:var(--red);color:#fff;}
+.succ-btn.secondary{background:#fff;color:var(--ink);border:2px solid var(--line);}
+.succ-tg{display:flex;align-items:center;justify-content:center;gap:8px;background:#229ED9;color:#fff;border-radius:13px;padding:14px;font-size:14px;font-weight:700;width:100%;}
+</style>
+<!-- HEADER -->
+<header class="ck-header">
+  <div class="ck-header-in">
+    <button class="btn-back" onclick="handleBack()">
+      <svg width="18" height="16" viewBox="0 0 18 16" fill="none"><path d="M8 1L1 8L8 15M1 8H17" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="ck-logo"><div class="mk">МК</div><div class="nm">ДОЛИНА</div></div>
+    <div class="ck-secure">
+      <svg width="12" height="14" viewBox="0 0 12 14" fill="none"><path d="M6 1L1 3.5V7C1 9.76 3.24 12.35 6 13C8.76 12.35 11 9.76 11 7V3.5L6 1Z" stroke="#8A8A8E" stroke-width="1.3"/></svg>
+    </div>
+  </div>
+</header>
+
+<!-- PROGRESS (mobile only) -->
+<div class="progress">
+  <div class="pbar done" id="bar1"></div>
+  <div class="pbar" id="bar2"></div>
+</div>
+
+<!-- MAIN -->
+<div class="ck-wrap" id="checkoutPage">
+
+  <!-- LEFT: корзина -->
+  <div id="leftCol">
+    <div class="card" id="cartCard">
+      <div class="card-head">
+        <h2>Корзина <span id="cartCountLabel"></span></h2>
+      </div>
+      <div class="items" id="cartItems"></div>
+      <div class="summary" id="cartSummary"></div>
+    </div>
+
+    <!-- мобильный футер (шаг 1) -->
+    <div class="mob-footer" id="mobFooter">
+      <div class="mob-total">
+        <span class="lbl">Итого к оплате</span>
+        <span class="val" id="mobTotal">0 ₽</span>
+      </div>
+      <button class="checkout-btn" onclick="goStep2()">Оформить заказ →</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: форма -->
+  <div id="rightCol" style="display:none;">
+    <div class="card">
+      <div class="card-head"><h2>Данные доставки</h2></div>
+      <div class="card-form">
+
+        <div class="fgroup">
+          <span class="flabel">Способ получения</span>
+          <div class="choices" id="modeGroup">
+            <div class="choice active" data-value="delivery">Доставка</div>
+            <div class="choice" data-value="pickup">Самовывоз</div>
+          </div>
+        </div>
+
+        <div class="fgroup" id="cityRow">
+          <span class="flabel">Город</span>
+          <div class="choices" id="cityGroup">
+            <div class="choice active" data-value="Новотроицк">Новотроицк<small>беспл. от 1 500 ₽</small></div>
+            <div class="choice" data-value="Орск">Орск<small>беспл. от 1 800 ₽</small></div>
+          </div>
+        </div>
+
+        <div id="deliveryFields">
+          <div class="fgroup">
+            <span class="flabel">Получатель</span>
+            <div class="row2" style="margin-bottom:10px;">
+              <input id="fN" class="finput" type="text" placeholder="Имя">
+              <input id="fL" class="finput" type="text" placeholder="Фамилия">
+            </div>
+            <input id="fP" class="finput" type="tel" placeholder="+7 (___) ___ __ __">
+          </div>
+          <div class="fgroup">
+            <span class="flabel">Адрес доставки</span>
+            <input id="fA" class="finput" type="text" placeholder="Улица и номер дома" style="margin-bottom:10px;">
+            <div class="row2" style="margin-bottom:10px;">
+              <input id="fEntrance" class="finput" type="text" placeholder="Подъезд">
+              <input id="fFloor" class="finput" type="text" placeholder="Этаж">
+            </div>
+            <div class="row2">
+              <input id="fApt" class="finput" type="text" placeholder="Квартира">
+              <input id="fIntercom" class="finput" type="text" placeholder="Домофон">
+            </div>
+          </div>
+        </div>
+
+        <div id="pickupFields" style="display:none;">
+          <div class="fgroup">
+            <span class="flabel">Получатель</span>
+            <div style="margin-bottom:10px;"><input id="fNp" class="finput" type="text" placeholder="Ваше имя"></div>
+            <input id="fPp" class="finput" type="tel" placeholder="+7 (___) ___ __ __">
+          </div>
+          <div class="fgroup">
+            <span class="flabel">Точка самовывоза</span>
+            <div class="pickup-points" id="pickupList">
+              <div class="pickup-point active" data-addr="г. Новотроицк, ул. Железнодорожная, 49">
+                <div class="pickup-point-name">Магазин № 1 — Производство</div>
+                <div class="pickup-point-addr">ул. Железнодорожная, 49</div>
+                <div class="pickup-point-time">Пн–Сб 08:00–18:00</div>
+              </div>
+              <div class="pickup-point" data-addr="г. Новотроицк, ул. Ломоносова, 48В">
+                <div class="pickup-point-name">Магазин № 2</div>
+                <div class="pickup-point-addr">ул. Ломоносова, 48В</div>
+                <div class="pickup-point-time">Пн–Сб 08:00–18:00</div>
+              </div>
+              <div class="pickup-point" data-addr="г. Новотроицк, ул. Марии Корецкой, 9">
+                <div class="pickup-point-name">Магазин № 3</div>
+                <div class="pickup-point-addr">ул. Марии Корецкой, 9</div>
+                <div class="pickup-point-time">Пн–Сб 08:00–18:00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fgroup" id="dateRow">
+          <span class="flabel">Дата доставки</span>
+          <div class="dates" id="dateChips"></div>
+        </div>
+
+        <div class="fgroup">
+          <span class="flabel">Время</span>
+          <div class="times" id="timeChips">
+            <div class="time-chip active" data-value="10:00–12:00">10:00–12:00</div>
+            <div class="time-chip" data-value="12:00–14:00">12:00–14:00</div>
+            <div class="time-chip" data-value="14:00–16:00">14:00–16:00</div>
+            <div class="time-chip" data-value="16:00–18:00">16:00–18:00</div>
+            <div class="time-chip" data-value="18:00–20:00">18:00–20:00</div>
+          </div>
+          <p class="hint">Ежедневно 10:00–20:00. Точное время согласуем после подтверждения.</p>
+        </div>
+
+        <div class="fgroup">
+          <span class="flabel">Комментарий</span>
+          <textarea id="fC" class="finput finput-ta" placeholder="Пожелания к заказу..."></textarea>
+        </div>
+
+        <div class="fgroup">
+          <span class="flabel">Telegram <span style="text-transform:none;font-weight:400;letter-spacing:0">(необязательно)</span></span>
+          <input id="fTg" class="finput" type="tel" placeholder="+7 900 000 00 00">
+          <p class="hint">Напишите боту <a href="https://t.me/mkdolina_orders_bot" target="_blank">@mkdolina_orders_bot</a> команду <b>/start</b> и получайте статус заказа</p>
+        </div>
+
+        <div class="fgroup">
+          <span class="flabel">Оплата</span>
+          <div class="choices" id="payGroup">
+            <div class="choice active" data-value="Наличные">Наличные</div>
+            <div class="choice" data-value="Карта">Карта</div>
+            <div class="choice" data-value="Перевод (СБП)">СБП</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="mini-receipt" id="miniReceipt"></div>
+      <div class="submit-wrap">
+        <button class="checkout-btn" id="submitBtn" onclick="confirmOrder()">Подтвердить заказ</button>
+      </div>
+      <p class="legal">Нажимая «Подтвердить», вы соглашаетесь на обработку персональных данных. После оформления с вами свяжется наш оператор.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- SUCCESS -->
+<div id="successPage">
+  <div class="succ-icon">✅</div>
+  <div class="succ-title">Заказ принят!</div>
+  <div class="succ-sub">Мы свяжемся с вами в течение 15 минут для подтверждения заказа.</div>
+  <div class="notice-scr">📸 Сделайте скриншот — он пригодится если потребуется уточнить детали</div>
+  <div class="succ-receipt" id="succReceipt"></div>
+  <div class="succ-actions">
+    <a href="#" id="tgLink" target="_blank" class="succ-tg">
+      <svg width="18" height="16" viewBox="0 0 24 20" fill="white"><path d="M22.26 1.19L1.12 9.06C-.27 9.6-.07 11.2 1.38 11.6l5.13 1.56 2.1 6.33c.26.79 1.29 1.01 1.87.4l2.97-3.1 5.7 4.12c.79.57 1.87.16 2.05-.78L23.97 2.5c.26-1.24-.88-2.25-1.71-1.31z"/></svg>
+      Отслеживать в Telegram
+    </a>
+    <button class="succ-btn primary" onclick="window.location.href='dolina-shop.html'">Продолжить покупки</button>
+    <a href="tel:+79198575342" class="succ-btn secondary" style="display:block;text-align:center;">📞 +7 919 857-53-42</a>
+  </div>
+</div>
+
+<script>
+var MIN_FREE={Новотроицк:1500,Орск:1800}, DEL_FEE={Новотроицк:200,Орск:250};
+var cart=[], selDate='', selTime='10:00–12:00', step=1;
+
+function isMob(){ return window.innerWidth<720; }
+
+/* ── CART ── */
+function loadCart(){
+  try{cart=JSON.parse(localStorage.getItem('mkd_cart')||'[]');}catch(e){cart=[];}
+  if(!cart.length){showEmpty();return;}
+  renderCart();
+  if(!isMob()) showRight();
+}
+function saveCart(){try{localStorage.setItem('mkd_cart',JSON.stringify(cart));}catch(e){}}
+function showEmpty(){
+  document.getElementById('leftCol').innerHTML='<div class="empty"><div class="empty-icon">🛒</div><h2>Корзина пуста</h2><p>Добавьте товары из каталога</p><button class="btn-red" onclick="location.href=\'dolina-shop.html\'">Вернуться в каталог</button></div>';
+  var mf=document.getElementById('mobFooter');if(mf)mf.style.display='none';
+}
+
+var CAT={'meat':'МС','semi':'ПФ','sausages':'СС','boiled':'ВК','smoked':'КК','delicacies':'ДЛ','byproducts':'СП','dough':'ТС','canned':'КН','shashlik':'ШШ','minced':'ФШ','mayo':'МЙ','sauces':'КС','grocery':'БК','bakery':'КЛ','bundle':'НБ'};
+function ico(p){return CAT[p.cat]||p.name.slice(0,2).toUpperCase();}
+function fmt(n){return n.toLocaleString('ru-RU');}
+function plural(n){var m=n%10,h=n%100;if(m===1&&h!==11)return n+' товар';if([2,3,4].includes(m)&&![12,13,14].includes(h))return n+' товара';return n+' товаров';}
+
+function getMode(){var a=document.querySelector('#modeGroup .active');return a?a.dataset.value:'delivery';}
+function getCity(){var a=document.querySelector('#cityGroup .active');return a?a.dataset.value:'Новотроицк';}
+function getPay(){var a=document.querySelector('#payGroup .active');return a?a.dataset.value:'Наличные';}
+function getPAddr(){var a=document.querySelector('#pickupList .active');return a?a.dataset.addr:'г. Новотроицк, ул. Железнодорожная, 49';}
+function getDel(){
+  if(getMode()==='pickup')return{cost:0,label:'Самовывоз',cls:'pickup'};
+  var t=cart.reduce(function(s,x){return s+x.price*x.qty;},0),c=getCity(),thr=MIN_FREE[c]||1500,fee=DEL_FEE[c]||200;
+  if(t>=thr)return{cost:0,label:'Бесплатно',cls:'free'};
+  return{cost:fee,label:fee+' ₽',cls:'paid'};
+}
+function getTotal(){return cart.reduce(function(s,x){return s+x.price*x.qty;},0);}
+function getGrand(){return getTotal()+getDel().cost;}
+
+function renderCart(){
+  var cnt=0,html='';
+  cart.forEach(function(p){
+    cnt+=p.qty;
+    html+='<div class="item">'
+      +'<div class="item-icon">'+ico(p)+'</div>'
+      +'<div class="item-info">'
+        +'<div class="item-name">'+p.name+'</div>'
+        +'<div class="item-unit">'+p.price+' ₽ / '+p.unit+'</div>'
+        +'<div class="item-total" id="it-'+p.id+'">'+(p.price*p.qty).toLocaleString('ru')+' ₽</div>'
+      +'</div>'
+      +'<div class="qty">'
+        +'<button class="qty-btn" onclick="chQ(\''+p.id+'\',-1)">−</button>'
+        +'<span class="qty-val" id="qv-'+p.id+'">'+p.qty+'</span>'
+        +'<button class="qty-btn plus" onclick="chQ(\''+p.id+'\',1)">+</button>'
+        +'<button class="qty-del" onclick="rm(\''+p.id+'\')">✕</button>'
+      +'</div></div>';
+  });
+  var lbl=document.getElementById('cartCountLabel');if(lbl)lbl.textContent='('+plural(cnt)+')';
+  var el=document.getElementById('cartItems');if(el)el.innerHTML=html;
+  renderSum();
+}
+function renderSum(){
+  var total=getTotal(),del=getDel(),grand=total+del.cost;
+  var city=getCity(),thr=MIN_FREE[city]||1500,pct=Math.min(100,Math.round(total/thr*100));
+  var fb=del.cost>0?'<div class="free-bar"><div class="free-bar-lbl"><span>До бесплатной доставки</span><b>ещё '+(thr-total).toLocaleString('ru')+' ₽</b></div><div class="free-bar-track"><div class="free-bar-fill" style="width:'+pct+'%"></div></div></div>':'';
+  var el=document.getElementById('cartSummary');if(!el)return;
+  el.innerHTML='<div class="sum-row"><span class="lbl">🚚 Доставка</span><span class="val '+del.cls+'">'+del.label+'</span></div>'
+    +'<div class="sum-row total"><span class="lbl">Итого</span><span class="val">'+fmt(grand)+' ₽</span></div>'+fb;
+  var mv=document.getElementById('mobTotal');if(mv)mv.textContent=fmt(grand)+' ₽';
+  renderMini();
+}
+function renderMini(){
+  var el=document.getElementById('miniReceipt');if(!el)return;
+  var del=getDel(),grand=getGrand();
+  var rows=cart.map(function(x){return'<div class="mini-row"><span>'+x.name+' × '+x.qty+' '+x.unit+'</span><span>'+(x.price*x.qty).toLocaleString('ru')+' ₽</span></div>';}).join('');
+  el.innerHTML=rows+'<div class="mini-row"><span class="gray">Доставка</span><span>'+del.label+'</span></div>'
+    +'<div class="mini-row"><span>Итого</span><span style="color:var(--red)">'+fmt(grand)+' ₽</span></div>';
+}
+function chQ(id,d){
+  var p=cart.find(function(x){return String(x.id)===String(id);});if(!p)return;
+  p.qty=Math.max(1,p.qty+d);saveCart();
+  var qv=document.getElementById('qv-'+id);if(qv)qv.textContent=p.qty;
+  var it=document.getElementById('it-'+id);if(it)it.textContent=(p.price*p.qty).toLocaleString('ru')+' ₽';
+  renderSum();
+}
+function rm(id){cart=cart.filter(function(x){return String(x.id)!==String(id);});saveCart();if(!cart.length){showEmpty();return;}renderCart();}
+
+/* ── STEPS ── */
+function showRight(){document.getElementById('rightCol').style.display='block';document.getElementById('bar2').classList.add('done');}
+function goStep2(){
+  step=2;
+  if(isMob()){document.getElementById('leftCol').style.display='none';document.getElementById('mobFooter').style.display='none';}
+  showRight();window.scrollTo(0,0);
+}
+function handleBack(){
+  if(step===2&&isMob()){
+    step=1;
+    document.getElementById('leftCol').style.display='block';
+    document.getElementById('rightCol').style.display='none';
+    document.getElementById('bar2').classList.remove('done');
+    window.scrollTo(0,0);
+  }else{history.back();}
+}
+
+/* ── CHIP GROUPS ── */
+function grp(id,cb){
+  var g=document.getElementById(id);if(!g)return;
+  g.addEventListener('click',function(e){
+    var t=e.target.closest('[data-value],[data-addr]');if(!t)return;
+    g.querySelectorAll('[data-value],[data-addr]').forEach(function(el){el.classList.remove('active');});
+    t.classList.add('active');if(cb)cb(t.dataset.value||t.dataset.addr);
+  });
+}
+
+/* ── MODE CHANGE ── */
+function onMode(){
+  var p=getMode()==='pickup';
+  document.getElementById('cityRow').style.display=p?'none':'block';
+  document.getElementById('deliveryFields').style.display=p?'none':'block';
+  document.getElementById('pickupFields').style.display=p?'block':'none';
+  document.getElementById('dateRow').style.display=p?'none':'block';
+  renderSum();
+}
+
+/* ── DATES ── */
+function genDates(){
+  var D=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],M=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+  var row=document.getElementById('dateChips');if(!row)return;row.innerHTML='';
+  for(var i=1;i<=7;i++){
+    var d=new Date();d.setDate(d.getDate()+i);
+    var val=d.toISOString().split('T')[0];
+    if(i===1)selDate=val;
+    var c=document.createElement('div');
+    c.className='date-chip'+(i===1?' active':'');c.dataset.value=val;
+    c.innerHTML='<div class="dow">'+(i===1?'Завтра':D[d.getDay()])+'</div><div class="day">'+d.getDate()+' '+M[d.getMonth()]+'</div>';
+    c.addEventListener('click',function(){document.querySelectorAll('.date-chip').forEach(function(el){el.classList.remove('active');});this.classList.add('active');selDate=this.dataset.value;});
+    row.appendChild(c);
+  }
+}
+
+/* ── PREFILL ── */
+function prefill(){
+  var f=function(id,k){var el=document.getElementById(id);if(el&&localStorage.getItem(k))el.value=localStorage.getItem(k);};
+  f('fN','mkd_name');f('fL','mkd_lastname');f('fP','mkd_phone');f('fA','mkd_address');
+  f('fNp','mkd_name');f('fPp','mkd_phone');
+}
+
+/* ── SUBMIT ── */
+function confirmOrder(){
+  var isPU=getMode()==='pickup';
+  var name=((document.getElementById(isPU?'fNp':'fN')||{}).value||'').trim();
+  var lname=((document.getElementById('fL')||{}).value||'').trim();
+  var phone=((document.getElementById(isPU?'fPp':'fP')||{}).value||'').trim();
+  var addr=((document.getElementById('fA')||{}).value||'').trim();
+  var ent=((document.getElementById('fEntrance')||{}).value||'').trim();
+  var flr=((document.getElementById('fFloor')||{}).value||'').trim();
+  var apt=((document.getElementById('fApt')||{}).value||'').trim();
+  var itc=((document.getElementById('fIntercom')||{}).value||'').trim();
+  var comm=((document.getElementById('fC')||{}).value||'').trim();
+  var tg=((document.getElementById('fTg')||{}).value||'').trim();
+
+  if(!name){alert('Укажите имя');document.getElementById(isPU?'fNp':'fN').focus();return;}
+  if(!phone||phone.replace(/\D/g,'').length<10){alert('Укажите номер телефона');document.getElementById(isPU?'fPp':'fP').focus();return;}
+  if(!isPU&&!addr){alert('Укажите адрес доставки');document.getElementById('fA').focus();return;}
+  if(!isPU&&!selDate){alert('Выберите дату доставки');return;}
+
+  var pay=getPay(),city=getCity(),paddr=getPAddr();
+  var addrD='';if(ent)addrD+=', подъ.'+ent;if(flr)addrD+=', эт.'+flr;if(apt)addrD+=', кв.'+apt;if(itc)addrD+=', дом.'+itc;
+  var addrFull=isPU?paddr:addr+addrD;
+  var dateStr=isPU?'':(function(){var d=new Date(selDate);return d.getDate()+'.'+(d.getMonth()+1<10?'0'+(d.getMonth()+1):d.getMonth()+1);}());
+  var now=new Date().toLocaleString('ru',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  var orderId='mkd-'+Date.now(),del=getDel(),grand=getGrand();
+
+  localStorage.setItem('mkd_name',name);if(lname)localStorage.setItem('mkd_lastname',lname);
+  localStorage.setItem('mkd_phone',phone);if(addr&&!isPU)localStorage.setItem('mkd_address',addr);
+
+  var itemsT=cart.map(function(x){return'  • '+x.name+' — '+x.qty+' '+x.unit+' × '+x.price.toLocaleString('ru')+' ₽ = <b>'+(x.price*x.qty).toLocaleString('ru')+' ₽</b>';}).join('\n');
+  var tgMsg='🛒 <b>НОВЫЙ ЗАКАЗ — МК ДОЛИНА</b>\n━━━━━━━━━━━━━━━━━━━━━\n\n'
+    +'👤 <b>Клиент:</b> '+e(name+(lname?' '+lname:''))+'\n📞 <b>Телефон:</b> '+e(phone)+'\n\n'
+    +(isPU?'🏪 Самовывоз: '+e(addrFull):'🚚 Доставка ('+e(city)+'): '+e(addrFull))+'\n'
+    +(!isPU?'📅 <b>Дата:</b> '+dateStr+' в '+selTime+'\n':'')
+    +'💳 <b>Оплата:</b> '+e(pay)+'\n\n📦 <b>Состав:</b>\n'+itemsT
+    +'\n\n━━━━━━━━━━━━━━━━━━━━━\n💰 <b>ИТОГО: '+grand.toLocaleString('ru')+' ₽</b>'
+    +(comm?'\n\n💬 '+e(comm):'')
+    +'\n\n🕒 '+now+'\n🆕 <b>Статус:</b> Новый заказ';
+
+  var btns={inline_keyboard:[[{text:'🟡 В обработке',callback_data:'status:'+orderId+':processing'},{text:'🔵 Принят',callback_data:'status:'+orderId+':accepted'}],[{text:'📦 Собирается',callback_data:'status:'+orderId+':packing'},{text:'🚚 В доставке',callback_data:'status:'+orderId+':shipping'}],[{text:'✅ Доставлен',callback_data:'status:'+orderId+':delivered'}]]};
+
+  var oData={id:orderId,uid:(window.fbCurrentUser?window.fbCurrentUser.uid:'guest'),name:name+(lname?' '+lname:''),phone:phone,delivery:isPU?'pickup':'delivery',city:city,address:addrFull,date:dateStr,time:selTime,payment:pay,comment:comm,tgContact:tg,items:cart.map(function(x){return{id:x.id,name:x.name,price:x.price,qty:x.qty,unit:x.unit};}),total:grand,status:'new',createdAt:new Date().toISOString()};
+
+  var btn=document.getElementById('submitBtn');if(btn){btn.disabled=true;btn.textContent='Отправляем...';}
+
+  tgSend(tgMsg,btns);
+  fetch('http://92.255.77.174:8081/tilda',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:oData.name,phone:oData.phone,total:grand,source:'site-checkout',comment:comm,address:addrFull,date:dateStr,time:selTime,payment:pay,items:oData.items.map(function(x){return x.name+' × '+x.qty+' '+x.unit+' = '+(x.price*x.qty).toLocaleString('ru')+' ₽';}).join(', ')})}).catch(function(){});
+  if(typeof window.fbSaveOrder==='function')window.fbSaveOrder(oData);
+  if(typeof window.fbSaveAnalytics==='function')window.fbSaveAnalytics(oData);
+  try{var loc=JSON.parse(localStorage.getItem('mkd_orders')||'[]');loc.unshift(oData);localStorage.setItem('mkd_orders',JSON.stringify(loc.slice(0,30)));}catch(er){}
+  cart=[];localStorage.removeItem('mkd_cart');
+  showSucc(oData);
+}
+
+function e(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function tgSend(text,rm,n){
+  n=n||1;var body={text:text,parse_mode:'HTML'};if(rm)body.reply_markup=rm;
+  return fetch('http://92.255.77.174:8081/tilda/notify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(function(r){if(!r.ok&&n<3)return new Promise(function(res){setTimeout(function(){res(tgSend(text,rm,n+1));},n*2000);});})
+    .catch(function(){if(n<3)return new Promise(function(res){setTimeout(function(){res(tgSend(text,rm,n+1));},n*2000);});});
+}
+
+function showSucc(o){
+  document.getElementById('tgLink').href='https://t.me/mkdolina_orders_bot?start='+o.phone.replace(/\D/g,'');
+  var rows=o.items.map(function(x){return'<div class="succ-receipt-row"><span>'+x.name+' × '+x.qty+' '+x.unit+'</span><span>'+(x.price*x.qty).toLocaleString('ru')+' ₽</span></div>';}).join('');
+  document.getElementById('succReceipt').innerHTML=
+    '<div class="succ-receipt-head"><span>МК ДОЛИНА — КВИТАНЦИЯ</span><span>'+(o.delivery==='pickup'?'🏪 Самовывоз':'🚚 Доставка')+'</span></div>'
+    +'<div class="succ-receipt-row"><span>Клиент</span><span>'+o.name+'</span></div>'
+    +'<div class="succ-receipt-row"><span>Телефон</span><span>'+o.phone+'</span></div>'
+    +'<div class="succ-receipt-row"><span>Адрес</span><span>'+o.address+'</span></div>'
+    +(o.date?'<div class="succ-receipt-row"><span>Время</span><span>'+o.date+' '+o.time+'</span></div>':'')
+    +'<div class="succ-receipt-row"><span>Оплата</span><span>'+o.payment+'</span></div>'
+    +'<hr style="border:none;border-top:1px dashed #ddd;margin:8px 0">'+rows
+    +'<div class="succ-receipt-row"><span>Итого</span><span style="color:var(--red)">'+o.total.toLocaleString('ru')+' ₽</span></div>';
+  document.getElementById('checkoutPage').style.display='none';
+  document.querySelector('.ck-header').style.display='none';
+  document.querySelector('.progress').style.display='none';
+  document.getElementById('successPage').classList.add('show');
+  window.scrollTo(0,0);
+}
+
+/* ── INIT ── */
+(function(){
+  loadCart();genDates();prefill();
+  grp('modeGroup',function(){onMode();});
+  grp('cityGroup',function(){renderSum();});
+  grp('payGroup');
+  grp('timeChips',function(v){selTime=v;});
+  document.getElementById('pickupList').addEventListener('click',function(ev){
+    var t=ev.target.closest('.pickup-point');if(!t)return;
+    document.querySelectorAll('.pickup-point').forEach(function(el){el.classList.remove('active');});
+    t.classList.add('active');
+  });
+  window.addEventListener('resize',function(){if(!isMob()&&step===1)showRight();});
+  var _t=setInterval(function(){if(typeof window.fbAnon==='function'){clearInterval(_t);window.fbAnon();}},150);
+  setTimeout(function(){clearInterval(_t);},8000);
+})();
+</script>
+
+<!-- Firebase -->
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import{getAuth,onAuthStateChanged,signInAnonymously}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import{getFirestore,doc,setDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+const app=initializeApp({apiKey:'AIzaSyCmlgzWaIaJulyWUBp3t0JZt5fq4fx5Lh8',authDomain:'mk-dolina.firebaseapp.com',projectId:'mk-dolina',storageBucket:'mk-dolina.firebasestorage.app',messagingSenderId:'851860360466',appId:'1:851860360466:web:91a8cc7f2ac2561e27f7cb'});
+const auth=getAuth(app),db=getFirestore(app);
+window.fbAnon=async function(){try{await signInAnonymously(auth);}catch(er){}};
+window.fbSaveOrder=async function(o){try{await setDoc(doc(db,'orders',o.id),Object.assign({},o,{savedAt:serverTimestamp()}));}catch(er){}};
+window.fbSaveAnalytics=async function(o){if((o.name||'').toLowerCase().includes('казым'))return;try{await setDoc(doc(db,'analytics_orders',o.id),Object.assign({},o,{savedAt:serverTimestamp()}));}catch(er){}};
+onAuthStateChanged(auth,function(u){window.fbCurrentUser=u||null;});
+</script>
