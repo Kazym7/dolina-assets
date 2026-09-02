@@ -1,0 +1,18 @@
+[
+ {
+  "id": 149,
+  "cat": "dough",
+  "name": "Мука пшеничная (г. Оренбург), мешок 50 кг",
+  "price": 1600,
+  "unit": "шт",
+  "img": "https://dostavka-produktov.ru/image/catalog/dostavka/muka_kursk_mealmall_2.png"
+ },
+ {
+  "id": 150,
+  "cat": "dough",
+  "name": "Мука пшеничная (г. Оренбург), фасовка 1 кг",
+  "price": 35,
+  "unit": "шт",
+  "img": "https://upload.wikimedia.org/wikipedia/commons/1/11/Wheat-flour.jpg"
+ }
+]
