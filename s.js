@@ -1,7 +1,32 @@
 /* МК ДОЛИНА — SEO fix 05.09.2026: синхронизация цен Schema.org ItemList + фикс мусорных H2.
-   Подключается через <script src> из HEAD-кода mkdolina.ru (поле HEAD-кода в Tilda
-   уже забито под завязку ~60133 символами — новый JS хостится тут, а не инлайном). */
+   06.09.2026: сам ItemList (140 товаров, ~34.5 КБ) вынесен из инлайна в HEAD-коде
+   Tilda (поле было на грани недокументированного лимита ~60133 символов) в отдельный
+   itemlist.json тут же, на dolina-assets. Гугл официально не читает JSON-LD через
+   <script src>, но читает JSON-LD, добавленный в DOM через JS — поэтому здесь он
+   подгружается fetch'ем и вставляется как обычный <script type="application/ld+json">
+   ДО вызова syncSchemaOrgPrices(), который его находит по DOM-селектору как раньше.
+   Подключается через <script src> из HEAD-кода mkdolina.ru. */
 (function () {
+  function injectItemList() {
+    var existing = false;
+    var ldScripts = document.querySelectorAll('script[type="application/ld+json"]');
+    for (var i = 0; i < ldScripts.length; i++) {
+      try {
+        if (JSON.parse(ldScripts[i].textContent)['@type'] === 'ItemList') { existing = true; break; }
+      } catch (e) {}
+    }
+    if (existing) return Promise.resolve();
+    return fetch('https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/itemlist.json')
+      .then(function (r) { return r.text(); })
+      .then(function (text) {
+        var s = document.createElement('script');
+        s.type = 'application/ld+json';
+        s.textContent = text;
+        document.head.appendChild(s);
+      })
+      .catch(function (e) { console.warn('[MKD] itemlist.json load failed', e); });
+  }
+
   function syncSchemaOrgPrices() {
     if (typeof products === 'undefined' || typeof getPrice !== 'function') return;
     var ldScripts = document.querySelectorAll('script[type="application/ld+json"]');
@@ -53,7 +78,7 @@
   }
 
   function boot() {
-    syncSchemaOrgPrices();
+    injectItemList().then(syncSchemaOrgPrices);
     fixSEOHeaders();
     var observer = new MutationObserver(function (mutations) {
       var shouldRun = mutations.some(function (m) { return m.addedNodes.length > 0; });
