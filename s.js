@@ -1,62 +1,20 @@
-/* МК ДОЛИНА — SEO fix 05.09.2026: синхронизация цен Schema.org ItemList + фикс мусорных H2.
-   06.09.2026: сам ItemList (140 товаров, ~34.5 КБ) вынесен из инлайна в HEAD-коде
-   Tilda (поле было на грани недокументированного лимита ~60133 символов) в отдельный
-   itemlist.json тут же, на dolina-assets. Гугл официально не читает JSON-LD через
-   <script src>, но читает JSON-LD, добавленный в DOM через JS — поэтому здесь он
-   подгружается fetch'ем и вставляется как обычный <script type="application/ld+json">
-   ДО вызова syncSchemaOrgPrices(), который его находит по DOM-селектору как раньше.
-   Подключается через <script src> из HEAD-кода mkdolina.ru. */
+/* МК ДОЛИНА — SEO fix 05.09.2026: фикс мусорных H2 (см. fixSEOHeaders).
+   06.09.2026: сюда же был вынесен статичный ItemList (itemlist.json, инжектился
+   через injectItemList()) — устранял лимит ~60133 символов в HEAD-коде Tilda.
+   21.09.2026: статичный инжект УДАЛЁН. Причина: на странице параллельно работает
+   ДРУГОЙ, динамический генератор каталожного ItemList — инлайн-скрипт
+   "MKDCompliance" (window.MKDProductCompliance), который на каждой загрузке
+   строит ItemList из живого var products + getPrice() и пытается удалить
+   предыдущие версии по text-match перед вставкой своей. Проблема была в том,
+   что static-инжект отсюда (после async fetch itemlist.json) добавлялся
+   ПОЗЖЕ, когда чистка MKDCompliance уже отработала — в результате на странице
+   одновременно жили два ItemList с расходящимися ценами (пример: SKU MKD-000
+   "Полутуша свиная" — 250₽ в устаревшем itemlist.json против 260₽ живых) и
+   136 из 140 товаров в статичной версии указывали url на главную страницу
+   вместо карточки товара. Дублей и гонки за removeChild не будет, если
+   генератор ItemList остаётся только один — MKDCompliance. itemlist.json
+   удалён из репо как источник устаревших данных. */
 (function () {
-  function injectItemList() {
-    var existing = false;
-    var ldScripts = document.querySelectorAll('script[type="application/ld+json"]');
-    for (var i = 0; i < ldScripts.length; i++) {
-      try {
-        if (JSON.parse(ldScripts[i].textContent)['@type'] === 'ItemList') { existing = true; break; }
-      } catch (e) {}
-    }
-    if (existing) return Promise.resolve();
-    return fetch('https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/itemlist.json')
-      .then(function (r) { return r.text(); })
-      .then(function (text) {
-        var s = document.createElement('script');
-        s.type = 'application/ld+json';
-        s.textContent = text;
-        document.head.appendChild(s);
-      })
-      .catch(function (e) { console.warn('[MKD] itemlist.json load failed', e); });
-  }
-
-  function syncSchemaOrgPrices() {
-    if (typeof products === 'undefined' || typeof getPrice !== 'function') return;
-    var ldScripts = document.querySelectorAll('script[type="application/ld+json"]');
-    var itemListScript = null, itemListData = null;
-    for (var i = 0; i < ldScripts.length; i++) {
-      try {
-        var d = JSON.parse(ldScripts[i].textContent);
-        if (d && d['@type'] === 'ItemList') { itemListScript = ldScripts[i]; itemListData = d; break; }
-      } catch (e) {}
-    }
-    if (!itemListScript || !itemListData || !itemListData.itemListElement) return;
-    var byId = {};
-    for (var j = 0; j < products.length; j++) byId[products[j].id] = products[j];
-    var kept = [], pos = 1;
-    for (var k = 0; k < itemListData.itemListElement.length; k++) {
-      var li = itemListData.itemListElement[k];
-      var m = li.item && li.item.sku && li.item.sku.match(/^MKD-(\d+)$/);
-      if (!m) continue;
-      var p = byId[parseInt(m[1], 10)];
-      if (!p) continue;
-      li.item.offers.price = String(getPrice(p));
-      li.position = pos++;
-      kept.push(li);
-    }
-    itemListData.itemListElement = kept;
-    itemListData.numberOfItems = kept.length;
-    itemListData.name = 'Каталог МК Долина — ' + kept.length + ' товаров';
-    itemListScript.textContent = JSON.stringify(itemListData);
-  }
-
   var BAD_CLASSES = ['mdc-title', 'mdc-h2', 'mdc-stitle', 'mkdcs-title'];
   var BAD_IDS = ['mkd-consent-modal-title'];
   var BAD_TEXTS = ['корзина', 'личный кабинет', 'оформление заказа'];
@@ -78,7 +36,6 @@
   }
 
   function boot() {
-    injectItemList().then(syncSchemaOrgPrices);
     fixSEOHeaders();
     var observer = new MutationObserver(function (mutations) {
       var shouldRun = mutations.some(function (m) { return m.addedNodes.length > 0; });
