@@ -19,7 +19,7 @@
   "id": 160,
   "cat": "canned",
   "name": "Каша рисовая с мясом",
-  "price": 110,
+  "price": 130,
   "unit": "шт",
   "isNew": true,
   "img": "https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/products/kasha-risovaya-s-myasom.jpg"
@@ -28,7 +28,7 @@
   "id": 161,
   "cat": "canned",
   "name": "Печень свиная в собственном соку",
-  "price": 110,
+  "price": 130,
   "unit": "шт",
   "isNew": true,
   "img": "https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/products/pechen-svinaya-v-sobstvennom-soku.jpg"
@@ -37,15 +37,16 @@
   "id": 162,
   "cat": "canned",
   "name": "Каша гречневая с говядиной",
-  "price": 125,
+  "price": 145,
   "unit": "шт",
-  "isNew": true
+  "isNew": true,
+  "img": "https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/cat/canned.jpg"
  },
  {
   "id": 163,
   "cat": "canned",
   "name": "Плов с говядиной",
-  "price": 120,
+  "price": 140,
   "unit": "шт",
   "isNew": true,
   "img": "https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/products/plov-s-govyadinoy.jpg"
@@ -54,7 +55,7 @@
   "id": 164,
   "cat": "canned",
   "name": "Плов с говядиной (вариант 2)",
-  "price": 140,
+  "price": 160,
   "unit": "шт",
   "isNew": true,
   "img": "https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/products/plov-s-govyadinoy.jpg"
@@ -63,7 +64,7 @@
   "id": 165,
   "cat": "canned",
   "name": "Почки свиные в томатном соусе",
-  "price": 110,
+  "price": 130,
   "unit": "шт",
   "isNew": true,
   "img": "https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/products/pochki-svinye-v-tomatnom-souse.jpg"
@@ -72,7 +73,7 @@
   "id": 166,
   "cat": "canned",
   "name": "Мясо кур",
-  "price": 120,
+  "price": 140,
   "unit": "шт",
   "isNew": true,
   "img": "https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/products/myaso-kur-v-sobstvennom-soku.jpg"
@@ -81,7 +82,7 @@
   "id": 167,
   "cat": "canned",
   "name": "Свинина с горохом",
-  "price": 85,
+  "price": 105,
   "unit": "шт",
   "isNew": true,
   "img": "https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/products/svinina-s-gorohom.jpg"
