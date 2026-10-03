@@ -1,6 +1,6 @@
 [
  {
-  "id": 149,
+  "id": 170,
   "cat": "dough",
   "name": "Мука пшеничная (г. Оренбург), мешок 50 кг",
   "price": 1600,
@@ -8,7 +8,7 @@
   "img": "https://cdn.jsdelivr.net/gh/Kazym7/dolina-assets@main/products/muka-orenburg-50kg.jpg"
  },
  {
-  "id": 150,
+  "id": 171,
   "cat": "dough",
   "name": "Мука пшеничная (г. Оренбург), фасовка 1 кг",
   "price": 35,
